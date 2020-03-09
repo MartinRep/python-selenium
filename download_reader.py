@@ -26,12 +26,12 @@ try:
     browser.get('http://192.168.1.254')
     password_input = WebDriverWait(browser, 10).until(EC.element_to_be_clickable((By.ID, 'login_password')))
     password_input.click()
-    password_input.send_keys('##PASSWORD##' + Keys.RETURN)
-    down_usage = WebDriverWait(browser, 10).until(EC.element_to_be_clickable((By.ID, 'home_total_down_flow')))
+    password_input.send_keys('##ROUTER PASSWORD##' + Keys.RETURN)
+    WebDriverWait(browser, 10).until(EC.element_to_be_clickable((By.ID, "menu_top_tools"))).click()
+    WebDriverWait(browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//div/div[3]/div"))).click()
+    down_usage = WebDriverWait(browser, 10).until(EC.element_to_be_clickable((By.ID, 'statistic_total_has_used')))
     whole_text = down_usage.text
-    print("Download usage in details:{} {}".format(whole_text[:-2], whole_text[-2:]))
-    logout_button = WebDriverWait(browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@onclick='EMUI.LogoutObjController.Logout();']")))
-    logout_button.click()
+    WebDriverWait(browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@onclick='EMUI.LogoutObjController.Logout();']"))).click()
     browser.quit()
 except Exception as e:
     print(e)
@@ -41,8 +41,6 @@ cursor = mariadb_connection.cursor(buffered=True)
 cursor.execute("SHOW TABLES LIKE 'dl_usage'")
 if(cursor.rowcount < 1):
     cursor.execute("CREATE TABLE dl_usage( measurement_id INT(11) NOT NULL AUTO_INCREMENT,  timestamp TIMESTAMP,  value FLOAT(5,1), unit VARCHAR(2), CONSTRAINT measurement_pk PRIMARY KEY (measurement_id))")
-# else:
-#     cursor.execute("DROP TABLE dl_usage")
 
 sql = "INSERT INTO dl_usage (value, unit) VALUES (%s, %s)"
 val = [float(whole_text[:-2]), str(whole_text[-2:])]
