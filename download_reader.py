@@ -20,13 +20,13 @@ chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
-browser = webdriver.Remote(
-    command_executor='http://192.168.1.1:4444/wd/hub',
-    options=chrome_options)
 
 successful = False
 while(not successful):
     try:
+        browser = webdriver.Remote(
+            command_executor='http://192.168.1.1:4444/wd/hub',
+            options=chrome_options)
         browser.get('http://192.168.1.254')
         password_input = WebDriverWait(browser, 10).until(EC.element_to_be_clickable((By.ID, 'login_password')))
         password_input.click()
